@@ -7,17 +7,25 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@vueuse/core": "^10.7.2",
     "axios": "^1.6.7",
     "core-js": "^3.8.3",
     "element-plus": "^2.5.5",
+    "js-cookie": "^3.0.5",
     "mockjs": "^1.1.0",
+    "nprogress": "^0.2.0",
+    "path-to-regexp": "^6.2.1",
     "typescript": "^5.3.3",
     "vue": "^3.2.13",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-service": "~5.0.0"
+    "@vue/cli-service": "~5.0.0",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
   },
   "browserslist": [
     "> 1%",

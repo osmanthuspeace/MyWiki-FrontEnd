@@ -1,7 +1,6 @@
 <template>
     <div class="container">
         <h2>User List</h2>
-        <button @click="loadUsers">Load Users</button>
 
         <div class="user-container">
             <div class="user" v-for="user in users" :key="user.id">
@@ -13,7 +12,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import axios from 'axios';
 const users = ref([]);
 
@@ -26,13 +25,16 @@ const loadUsers = () => {
             console.error('Error loading users:', error);
         });
 };
+
+onMounted(()=>{
+  loadUsers();
+})
 </script>
 
 <style scoped>
 .container {
     background-color: navajowhite;
     height: 100%;
-    border-radius: 10px;
 }
 
 .user-container {
