@@ -62,14 +62,12 @@ const store = useStore() // 使用 useStore 获取 store 实例
 const handleLogin = () => {
   store.dispatch('login', loginForm.value)
     .then(() => {
-      router.push({ path: redirect.value || '/' }); // 登录成功后重定向到指定页面
+      router.push('/'); // 登录成功后重定向到指定页面
     }).catch((e) => {
       console.log(e.response.data)
       loading.value = false
     });
-
 }
-//router.push({ path: redirect.value || '/' }); // 登录成功后重定向到指定页面
 
 </script>
 

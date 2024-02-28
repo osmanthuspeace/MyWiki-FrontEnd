@@ -1,12 +1,11 @@
 <template>
-
-    <div class="up">
-      <Header />
-    </div>
-    <div class="section">
-      <Side />
-      <Display />
-    </div>
+  <div class="up">
+    <Header />
+  </div>
+  <div class="section">
+    <Side />
+    <Display />
+  </div>
 
   <!-- <Layout /> -->
 </template>
@@ -15,7 +14,6 @@
 import Header from './components/Header.vue';
 import Side from './components/Side.vue';
 import Display from './components/Display.vue';
-
 </script>
 
 <style>
@@ -38,7 +36,7 @@ import Display from './components/Display.vue';
 }
 
 .up {
-  min-height: 80px;
+  min-height: 60px;
 }
 
 .section {

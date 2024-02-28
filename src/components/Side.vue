@@ -1,52 +1,51 @@
 <template>
-  <div>
-    <h1>Side</h1>
-    <el-aside style="width: 200px">
-      <el-scrollbar>
-        <el-collapse-transition>
-          <el-menu :default-openeds="['1', '2']" style="width: 100%">
-            <el-sub-menu index="1">
-              <template #title>
-                <el-icon>
-                  <User />
-                </el-icon>
-                <span v-if="showText" @click="toUsers">用户列表</span>
-              </template>
+  <el-menu class="el" :default-openeds="['1', '2']" :collapse="isCollapse" :style="{ width: isCollapse ? '' : '200px' }" v-show="isLogged">
+    <el-menu-item index="1">
+      <template #title>
+        <div @click="toUserInfo">
+          <el-icon><Setting /></el-icon>
+          <span>Dashboard</span>
+        </div>
+      </template>
+    </el-menu-item>
 
-              <el-menu-item index="1-1" @click="toRoles">Roles</el-menu-item>
 
-            </el-sub-menu>
-            <el-sub-menu index="2">
-              <template #title>
-                <el-icon>
-                  <Grid />
-                </el-icon>
-                <span v-if="showText" @click="toEntries">词条列表</span>
-              </template>
-              <el-menu-item index="1-1" @click="toTags">Tags</el-menu-item>
+    <el-sub-menu index="2">
+      <template #title>
+        <div @click="toUsers">
+          <el-icon>
+            <User />
+          </el-icon>
+          <span>用户列表</span>
+        </div>
+      </template>
 
-            </el-sub-menu>
-            <!-- 其他菜单项省略 -->
-          </el-menu>
-        </el-collapse-transition>
-      </el-scrollbar>
-    </el-aside>
+      <el-menu-item index="2-1" @click="toRoles">Roles</el-menu-item>
 
-  </div>
+    </el-sub-menu>
+    <el-sub-menu index="3">
+      <template #title>
+        <div @click="toEntries">
+          <el-icon>
+            <Grid />
+          </el-icon>
+          <span>词条列表</span>
+        </div>
+      </template>
+      <el-menu-item index="3-1" @click="toTags">Tags</el-menu-item>
+      <el-menu-item index="3-2">Create new Entries</el-menu-item>
+    </el-sub-menu>
+    <!-- 其他菜单项省略 -->
+  </el-menu>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Message } from "@element-plus/icons-vue";
 import router from '@/router';
-const showSidebar = ref(true);
-const showText = ref(true); // 控制是否显示菜单项文字
 
-const handleResize = () => {
-  showSidebar.value = window.innerWidth >= 400;
-  showText.value = window.innerWidth >= 400; // 根据窗口宽度决定是否显示菜单项文字
-};
-
+const isCollapse = ref(false);
+const isLogged = ref(false);
 
 function toUsers() {
   router.push('/users');
@@ -60,14 +59,16 @@ function toTags() {
 function toRoles() {
   router.push('/roles');
 }
+function toUserInfo() {
+  router.push('/userInfo');
+}
 onMounted(() => {
-  handleResize();
-  window.addEventListener('resize', handleResize);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-});
+  isLogged.value = localStorage.getItem('token') !== null;
+  if (!isLogged.value) {
+    // Message.error('Please login first');
+    router.push('/');
+  }
+})
 </script>
 
 <style scoped>
@@ -80,5 +81,9 @@ div {
 
 el-sub-menu {
   padding-left: 0;
+}
+
+.el {
+  border: 0;
 }
 </style>

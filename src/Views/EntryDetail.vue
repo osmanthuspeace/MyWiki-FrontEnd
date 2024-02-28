@@ -1,9 +1,17 @@
 <template>
-    <div>
-        <h2>Entry Detail</h2>
-        <h3>{{ entry.title }}</h3>
-        <pre>{{ entry.content }}</pre>
-        <p>{{ entry.tagNames }}</p>
+    <div class="container">
+        <h2>{{ entry.title }}</h2>
+        <div class="content">
+            <span>content: </span>
+            <pre>{{ entry.content }}</pre>
+        </div>
+        <div class="tag">
+            <span>Tags:</span>
+            <span v-for="tag in entry.tagNames">
+                <el-tag>{{ tag }}</el-tag>
+            </span>
+        </div>
+
     </div>
     <el-button type="primary" @click="edit">编辑</el-button>
     <el-button type="danger" v-if="false">删除</el-button>
@@ -16,13 +24,12 @@ import router from '@/router';
 const entry = ref({});
 
 const props = defineProps({
-    id: String // 假设 entryId 是一个字符串类型的 props
+    id: String 
 });
 axios.get('/Entry/GetEntryById/' + props.id)
     .then(response => {
         console.log(response.data);
         entry.value = response.data;
-        // sessionStorage.setItem('entryDetail', JSON.stringify(response.data));
     }).catch(error => {
         console.error('Error loading entry detail:', error);
     })
@@ -32,4 +39,25 @@ const edit = () => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+    padding-top: 10px;
+    margin: 0 auto;
+    width: 400px;
+}
+
+.content {
+    margin: 1px auto;
+    border: 1px solid #ccc;
+    width: 400px;
+}
+
+.tag {
+    margin: 1px auto;
+    width: 400px;
+}
+
+.tag>* {
+    margin-right: 5px;
+}
+</style>

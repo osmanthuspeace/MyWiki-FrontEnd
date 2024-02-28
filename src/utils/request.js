@@ -1,73 +1,42 @@
-import axios from 'axios'
-import store from '@/store'
-import { getToken } from '@/utils/auth'
-import { ElMessageBox,ElMessage } from 'element-plus'
+import axios from "axios";
+import store from "@/store/auth.js";
+import { ElMessageBox, ElMessage } from "element-plus";
 
-const service=axios.create({
-    baseURL:"http://localhost:5432",
-    withCredentials: true, // send cookies when cross-domain requests
-    timeout: 5000 // request timeout
-})
+const service = axios.create({
+  baseURL: "http://localhost:5054/api", // url = base url + request url
+  withCredentials: true, // send cookies when cross-domain requests
+  timeout: 5000, // request timeout
+});
 
-service.interceptors.request.use(//拦截器，use()有两个参数，分别是请求之前和失败时的回调函数，前面那个变量是参数名,表示当前请求的配置对象/错误对象
-    (config)=>{
-        if(store.getters.token){
-            config.headers["Authorization"]=getToken();
-            return config;
-        }
-    },
-    (err)=>{
-        //do something with request error
-        console.log(err); // for debug
-        return Promise.reject(err);
+service.interceptors.request.use(
+  //拦截器，use()有两个参数，分别是请求之前和失败时的回调函数，前面那个变量是参数名,表示当前请求的配置对象/错误对象
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers["Authorization"] = "Bearer " + token;
+      return config;
+    } else {
+      return config;
     }
-)
+  },
+  (err) => {
+    console.log(err); // for debug
+    return Promise.reject(err);
+  }
+);
+// 响应拦截器
 service.interceptors.response.use(
-    response=>{
-        const res=response.data;
-        if(res.code!==200){
-            ElMessage({
-                showClose: true,
-                message: res.message || 'Oops! There is an error!',
-                type: 'error',
-            })
-            if(res.code===404){// to re-login
-                ElMessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again',
-                    'Confirm to re-login',
-                    {
-                        confirmButtonText: 'OK',
-                        cancelButtonText: 'Cancel',
-                    }.then(() => {
-                        ElMessage({
-                            type: 'success',
-                            message: 'Please login',
-                        })
-                        store.dispatch('user/resetToken').then(() => {
-                            location.reload()
-                        })
-                    }).catch(() => {
-                        ElMessage({
-                            type: 'info',
-                            message: 'request canceled',
-                        })
-                    })
-                ).then()
-            }
-            return Promise.reject(new Error(res.message || 'Error'))
-        }
-
-        else{
-            return res;
-        }
-    },
-    error => {
-        console.log('err'+error)
-        ElMessage({
-            message: error.message,
-            type: 'error',
-            duration: 5 * 1000
-        })
-        return Promise.reject(error)
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // 处理 401 错误（未授权/Token 过期等）
+      ElMessage.error("Token 已过期，请重新登录");
+      store.dispatch("logout"); // 或其他逻辑，例如清除 token
+      router.push("/login");
     }
-)
-export default service
+    return Promise.reject(error);
+  }
+);
+export default service;

@@ -2,16 +2,14 @@
   <div class="container">
     <h2>Entry List</h2>
     <div class="search">
-      <el-input v-model="input" placeholder="Please input" class="input-with-select" clearable>
-        <template #prepend>
-          <el-select v-model="select" placeholder="Select Tags" style="width: 115px">
-            <el-option label="Restaurant" value="1" />
-            <el-option label="Order No." value="2" />
-            <el-option label="Tel" value="3" />
-          </el-select>
-        </template>
+      <el-input v-model="input" placeholder="Please input Title" class="input-with-select" clearable>
         <template #append>
           <el-button :icon="Search" @click="SearchEntry" />
+        </template>
+      </el-input>
+      <el-input v-model="inputTag" placeholder="Please input Tag" class="input-with-select" clearable>
+        <template #append>
+          <el-button :icon="Search" @click="SearchTag" />
         </template>
       </el-input>
     </div>
@@ -40,8 +38,8 @@ import { Search } from '@element-plus/icons-vue'
 const entries = ref([]);
 const currentPage = ref(1);
 const pageSize = ref(10);
-const select = ref('');
 const input = ref('');
+const inputTag = ref('')
 const entryNum = ref(100);
 
 // axios.defaults.headers.common['Authorization'] = 'Bearer ' + yourJWTToken;
@@ -50,7 +48,7 @@ const entryNum = ref(100);
 const loadEntries = () => {
   axios.get('http://localhost:5054/api/Entry/GetEntries?page=' + currentPage.value + '&pageSize=' + pageSize.value)
     .then(response => {
-      console.log(response.data);
+      // console.log(response.data);
       entries.value = response.data;
     })
     .catch(error => {
@@ -72,6 +70,22 @@ const SearchEntry = () => {
       console.error('Error loading entries:', error);
     });
 };
+
+const SearchTag = () => {
+  if (inputTag.value === '') {
+    window.location.reload();
+  }
+  axios.get('http://localhost:5054/api/Entry/GetEntriesByTags?tagNames=' + inputTag.value + '&page=' + currentPage.value + '&pageSize=' + pageSize.value)
+    .then(response => {
+      console.log(response.data);
+      entries.value = response.data;
+      entryNum.value = response.data.length;
+    })
+    .catch(error => {
+      console.error('Error loading entries:', error);
+    });
+};
+
 function handleCurrentChange(val) {
   currentPage.value = val;
   loadEntries();
@@ -84,12 +98,11 @@ const truncateContent = (content) => {
 
 
 function toDetail(entry) {
-  const id=entry.id;
+  const id = entry.id;
   router.push(`/entry/${id}`);
 }
-
-
 onMounted(() => {
+  
   let pageHeight = document.querySelector('.container').clientHeight;
   pageSize.value = Math.floor(pageHeight / 200) * 3;
   axios.get('/Entry/GetEntryTotal').then(response => {
@@ -156,11 +169,21 @@ onMounted(() => {
 }
 
 .search {
-  width: 400px;
-  margin-bottom: 20px;
+  display: flex;
+  width: 600px;
+  margin: 0 auto;
 }
 
 .search .icon:hover {
   cursor: pointer;
+}
+
+.input-with-select {
+  margin-right: 10px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 </style>

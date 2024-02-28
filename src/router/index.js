@@ -6,26 +6,29 @@ import RegisterVue from "../Views/Register.vue";
 import error from "../Views/Error.vue";
 import tags from "../Views/Tags.vue";
 import EntryDetail from "../Views/EntryDetail.vue";
+import request from "../utils/request";
+import UserInfo from "../Views/UserInfo.vue";
 
 const routes = [
   {
     path: "/",
-    redirect: "/Entries",
+    redirect: "/entries",
   },
   {
-    path: "/Entries",
+    path: "/entries",
     component: EntriesVue,
   },
   {
-    path: "/Users",
+    path: "/users",
     component: UsersVue,
+    meta: { requiresAuth: true }, // 需要身份验证
   },
   {
-    path: "/Login",
+    path: "/login",
     component: LoginVue,
   },
   {
-    path: "/Register",
+    path: "/register",
     component: RegisterVue,
   },
   {
@@ -51,11 +54,17 @@ const routes = [
     component: () => import("../Views/Edit.vue"),
     props: true,
   },
+  {
+    path: "/userinfo",
+    component: UserInfo,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
 
 export default router;
