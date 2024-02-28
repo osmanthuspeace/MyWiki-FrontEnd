@@ -30,7 +30,6 @@ import router from '@/router';
 
 const tags = ref([])
 const options = ref([]);
-// do not use same name with ref
 const form = reactive({
     title: '',
     content: '',

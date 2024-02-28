@@ -12,7 +12,6 @@
       </template>
     </el-menu-item>
 
-
     <el-sub-menu index="2">
       <template #title>
         <div>
@@ -39,7 +38,6 @@
       <el-menu-item index="3-2" @click="toTags">Tags</el-menu-item>
       <el-menu-item index="3-3" @click="toCreate">Create new Entries</el-menu-item>
     </el-sub-menu>
-    <!-- 其他菜单项省略 -->
   </el-menu>
 </template>
 

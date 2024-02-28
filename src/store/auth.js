@@ -1,8 +1,6 @@
 import { createStore } from "vuex";
-import axios from "axios";
 import router from "../router";
 import request from "../utils/request";
-import { set } from "nprogress";
 
 const store = createStore({
   state() {

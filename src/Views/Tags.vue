@@ -32,23 +32,17 @@ onMounted(() => {
 <style scoped>
 .container {
     max-width: 800px;
-    /* 限制容器的最大宽度，你可以根据实际需要调整 */
     margin: 20px auto;
-    /* 居中显示，并添加上下边距 */
     padding: 10px;
-    /* 容器内边距 */
 }
 
 h1 {
     text-align: center;
-    /* 标题居中 */
     margin-bottom: 20px;
-    /* 与下方内容的间隔 */
 }
 
 .div {
     display: flex;
-    /* 使用Flex布局 */
     flex-wrap: wrap;
     /* 允许标签换行 */
     gap: 10px;
@@ -59,13 +53,8 @@ h1 {
 
 .tags {
     cursor: pointer;
-    /* 将鼠标光标变为指针，表明这是可点击的 */
     padding: 5px 10px;
-    /* 标签内边距，增加点击区域和视觉效果 */
     font-size: 14px;
-    /* 设置标签文字大小 */
     border-radius: 5px;
-    /* 轻微的圆角边框，看起来更友好 */
-    /* 你可以添加更多样式来定制标签的颜色、边框等 */
 }
 </style>
