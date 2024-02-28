@@ -1,63 +1,139 @@
 <template>
-  <div class="register">
-    <h1 class="h">注册</h1>
-    <form method="post" class="form">
-      <label>请输入用户名</label>
-      <input type="text" class="bod" v-model="username" placeholder="string" @input="checkUsername"/>
+  <div class="login-container">
+    <el-form :model="loginForm" auto-complete="on" label-position="left">
 
-      <label>密码</label>
-      <input type="password" class="bod" v-model="password" placeholder="123456"/>
+      <div>
+        <h3 class="title">Register Form</h3>
+      </div>
 
-      <button type="button" id="log" @click="register" :disabled="isUsernameChecking">注册</button>
-      <p v-if="isUsernameChecking">正在检查用户名...</p>
-      <p v-if="isUsernameExists">该用户名已被注册，请使用其他用户名。</p>
-    </form>
+      <el-form-item prop="username">
+        <el-input ref="username" v-model="loginForm.username" placeholder="Username" name="username" type="text"
+          tabindex="1" auto-complete="on" />
+        <p style="color: red;" v-if="validname">{{ validname }}</p>
+      </el-form-item>
+
+      <el-form-item prop="password">
+
+        <el-input :key="passwordType" ref="password" v-model="loginForm.password" :type="passwordType"
+          placeholder="Password" name="password" tabindex="2" auto-complete="on" @keyup.enter.native="handleRegister"
+          class="password-input" />
+        <span @click="showPwd" class="icon-wrapper">
+          <el-icon v-if="showpwd" class="eye-icon">
+            <View />
+          </el-icon>
+          <el-icon v-else class="eye-icon">
+            <Hide />
+          </el-icon>
+        </span>
+      </el-form-item>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
+        @click.native.prevent="handleRegister">Register</el-button>
+    </el-form>
   </div>
 </template>
 
 <script setup>
-import axios from "axios";
-import {ref, watch, computed} from 'vue';
+import { ref, watch, nextTick } from 'vue';
+import { ElMessage } from 'element-plus';
+import axios from 'axios';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
-const username = ref('');
-const password = ref('');
-const isUsernameChecking = ref(false);
-const isUsernameExists = ref(false);
+// 引用和定义
+const loginForm = ref({
+  username: '',
+  password: ''
+});
+const validname = ref(''); // 用于显示用户名验证信息
+const loading = ref(false);
+const showpwd = ref(false);
+const passwordType = ref('password');
 
-const checkUsername = debounce(() => {
+const router = useRouter();
+const store = useStore();
 
-  if (username.value !== '') {
-    isUsernameChecking.value = true;
-    axios.get(`http://localhost:5054/api/User/CheckUserName?name=${username.value}`)
-        .then(response => {
-          isUsernameExists.value = response.data;
-        })
-        .catch(error => {
-          isUsernameExists.value = error.response.data;
-          console.error('Error checking username:', error);
-        })
-        .finally(() => {
-          isUsernameChecking.value = false;
-        });
+// 显示或隐藏密码
+const showPwd = () => {
+  showpwd.value = !showpwd.value;
+  passwordType.value = showpwd.value ? 'text' : 'password';
+};
+
+// 用户名和密码的验证规则
+const validateUsername = async () => {
+  if (loginForm.value.username.trim().length < 3 || loginForm.value.username.trim().length > 20) {
+    validname.value = 'Username must be between 3 and 20 characters.';
+    return false;
   }
+  // 调用后端接口检查用户名是否重复
+  try {
+    const response = await axios.get('/User/CheckUserName', {
+      params: { name: loginForm.value.username }
+    });
+    if (response.data) { // 假设后端返回的数据中有一个exists字段，表示用户名是否存在
+      validname.value = 'Username is already taken.';
+      return false;
+    }
+  } catch (error) {
+    ElMessage.error(error.response.data || 'Username validation failed.');
+    return false;
+  }
+  validname.value = '';
+  return true;
+};
 
-}, 500);
+const validatePassword = () => {
+  if (loginForm.value.password.trim().length < 6 || loginForm.value.password.trim().length > 20) {
+    ElMessage.error('Password must be between 6 and 20 characters.');
+    return false;
+  }
+  // 这里可以添加更多的密码验证逻辑（如检查密码复杂度）
+  return true;
+};
 
-function register() {
-  // Perform registration logic
-}
+// 注册处理
+const handleRegister = async () => {
+  if (!(await validateUsername()) || !validatePassword()) {
+    return; // 如果验证失败，则不继续执行注册逻辑
+  }
+  loading.value = true;
+  store.dispatch('register', loginForm.value)
+    .then(() => {
+      router.push('/login'); // 注册成功后重定向到登录页面
+    }).catch((error) => {
+      ElMessage.error(error.response.data || 'Registration failed.');
+      loading.value = false;
+    });
+};
 
-// 防抖函数
-function debounce(func, delay) {
-  let timerId;
-  return function () {
-    clearTimeout(timerId);
-    timerId = setTimeout(() => {
-      func.apply(this, arguments);
-    }, delay);
-  };
-}
+// 监控用户名变化以验证用户名
+watch(() => loginForm.value.username, validateUsername);
+
 </script>
 
-<style scoped>
+<style>
+.login-container {
+  width: 350px;
+  margin: 20vh auto;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.password-input {
+  position: relative;
+}
+
+.icon-wrapper {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  /* 调整图标距离输入框的右边距 */
+  transform: translateY(-50%);
+}
+
+.eye-icon {
+  cursor: pointer;
+}
 </style>

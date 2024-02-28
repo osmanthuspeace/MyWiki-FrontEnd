@@ -46,13 +46,13 @@ const showPwd = () => {
 }
 
 const loginForm = ref({
-  username: '',
-  password: ''
+  username: 'string',
+  password: 'string'
 })
 
 // ref 创建的引用是根据元素的挂载顺序来确定的，所以在模板中使用 ref 时，需要确保元素已经挂载
 const loading = ref(false)
-const redirect = ref(undefined)
+
 
 const route = useRoute()
 const router = useRouter()
@@ -62,6 +62,7 @@ const store = useStore() // 使用 useStore 获取 store 实例
 const handleLogin = () => {
   store.dispatch('login', loginForm.value)
     .then(() => {
+      loading.value = true;
       router.push('/'); // 登录成功后重定向到指定页面
     }).catch((e) => {
       console.log(e.response.data)

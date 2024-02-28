@@ -1,9 +1,9 @@
 <template>
-    <el-descriptions class="margin-top" title="UerInfo" :column="1" :size="size" border>
+    <el-descriptions class="margin-top" title="UerInfo" :column="1" :size="size" border width>
         <!-- <template #extra>
       <el-button type="primary">Operation</el-button>
     </template> -->
-        <el-descriptions-item>
+        <el-descriptions-item width="150px">
             <template #label>
                 <div class="cell-item">
                     <el-icon :style="iconStyle">
@@ -49,9 +49,8 @@ function loginout() {
 
 
 onMounted(() => {
-
     name.value = localStorage.getItem('username');
-    // console.log(name.value);
+    console.log(name.value);
     request.get('/User/GetUserInfoByName?name=' + name.value)
         .then(response => {
             role.value = response.data.roleName;
@@ -65,7 +64,7 @@ onMounted(() => {
 <style scoped>
 .margin-top {
     padding-top: 50px;
-    width: 600px;
+    max-width: 600px;
     margin: 0 auto;
 }
 </style>

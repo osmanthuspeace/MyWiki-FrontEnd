@@ -3,7 +3,7 @@ import axios from "axios";
 import router from "../router";
 import request from "../utils/request";
 import { set } from "nprogress";
-import { sliderButtonEmits } from "element-plus/es/components/slider/src/button";
+
 const store = createStore({
   state() {
     return {
@@ -20,6 +20,9 @@ const store = createStore({
     getUsername(state) {
       return state.username;
     },
+    getLoginState(state) {
+      return state.isLoggedIn;
+    }
   },
   mutations: {
     setToken(state, token) {
@@ -39,9 +42,22 @@ const store = createStore({
     },
   },
   actions: {
+    async register({ username, password }){
+      return request
+        .post("/User/Register", {
+          Name: username,
+          Password: password,
+        })
+        .then(() => {
+          return true;
+        })
+        .catch((error) => {
+          console.log(error);
+        }); 
+    },
     async login({ commit }, { username, password }) {
       return request
-        .post("User/Login", {
+        .post("/User/Login", {
           Name: username,
           Password: password,
         })
@@ -52,26 +68,19 @@ const store = createStore({
           commit("setToken", token);
           commit("setUsername", username);
           commit("setLoginState", true);
-          window.location.reload();
+          return true;
         })
         .catch((error) => {
           console.log(error);
+
         });
     },
     logout({ commit }) {
-      // 清除 token
       commit("clearToken");
-      // 清除 localStorage 中的 token
       localStorage.removeItem("token");
-      window.location.reload();
+      commit("setLoginState", false);
       router.push("/");
     },
-    // 可选：检查 token 是否有效
-    // checkToken({ commit, state }) {
-    //   if (state.token) {
-    //     // 发送请求检查 token 是否有效
-    //   }
-    // },
   },
 });
 export default store;

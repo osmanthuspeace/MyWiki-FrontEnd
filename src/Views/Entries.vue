@@ -13,13 +13,12 @@
         </template>
       </el-input>
     </div>
-
     <div class="entry-container">
       <div class="entry" v-for="entry in entries" :key="entry.id" @click="toDetail(entry)">
         <img src="../../public/fox.jpg" alt="this is the picture of the entry" class="img">
         <div>{{ entry.title }}</div>
         <ul>
-          <div v-for="tag in entry.tagNames" :key="tag.id" class="tags">{{ tag }}</div>
+          <el-tag v-for="tag in entry.tagNames" :key="tag.id" class="tags">{{ tag }}</el-tag>
         </ul>
       </div>
     </div>
@@ -32,17 +31,15 @@
 <script setup>
 import router from '@/router';
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, nextTick } from 'vue';
 import { Search } from '@element-plus/icons-vue'
-
+import { ElMessage } from 'element-plus'
 const entries = ref([]);
 const currentPage = ref(1);
 const pageSize = ref(10);
 const input = ref('');
 const inputTag = ref('')
 const entryNum = ref(100);
-
-// axios.defaults.headers.common['Authorization'] = 'Bearer ' + yourJWTToken;
 
 // 加载词条数据的函数
 const loadEntries = () => {
@@ -52,10 +49,12 @@ const loadEntries = () => {
       entries.value = response.data;
     })
     .catch(error => {
-      router.push('/error');
-      console.error('Error loading entries:', error);
+      if (error.response.code === 404)
+        router.push('/error');
+      ElMessage.error(error.response.data);
     });
 };
+
 const SearchEntry = () => {
   if (input.value === '') {
     window.location.reload();
@@ -67,7 +66,8 @@ const SearchEntry = () => {
       entryNum.value = response.data.length;
     })
     .catch(error => {
-      console.error('Error loading entries:', error);
+      const errorData = error.response.data;
+      ElMessage.error(errorData);
     });
 };
 
@@ -82,7 +82,8 @@ const SearchTag = () => {
       entryNum.value = response.data.length;
     })
     .catch(error => {
-      console.error('Error loading entries:', error);
+      const errorData = error.response.data;
+      ElMessage.error(errorData);
     });
 };
 
@@ -91,99 +92,134 @@ function handleCurrentChange(val) {
   loadEntries();
 }
 
-// 截取字符串的方法
-const truncateContent = (content) => {
-  return content.length > 20 ? content.substring(0, 20) + '...' : content;
-};
-
-
 function toDetail(entry) {
   const id = entry.id;
   router.push(`/entry/${id}`);
 }
-onMounted(() => {
-  
-  let pageHeight = document.querySelector('.container').clientHeight;
-  pageSize.value = Math.floor(pageHeight / 200) * 3;
-  axios.get('/Entry/GetEntryTotal').then(response => {
-    entryNum.value = response.data;
-  });
-  loadEntries(); // 页面加载后立即加载词条数据
+
+onMounted(async () => {
+  await nextTick(); // 确保DOM更新完成
+
+  let container = document.querySelector('.container');
+  if (container) {
+    let pageHeight = container.clientHeight;
+    // console.log(pageHeight);
+    pageSize.value = Math.floor((pageHeight * 2) / (200)) * 3;
+
+    axios.get('/Entry/GetEntryTotal').then(response => {
+      entryNum.value = response.data;
+    });
+    loadEntries();
+  }
 });
+
+
+
 </script>
 
 <style scoped>
+/* 容器样式 */
 .container {
-  background-color: aqua;
-  height: 100%;
-  padding: 10px;
-  box-sizing: border-box;
+  max-width: 1200px;
+
+  /* 最大宽度，确保内容在大屏幕上的可读性 */
+  margin: 0 auto;
+  /* 居中显示 */
+  padding: 20px;
+  /* 内边距 */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* 设置字体 */
 }
 
-.entry-container {
-  padding: 30px;
-  display: grid;
-  /* 使用Grid布局 */
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  /* 列宽自适应，最小150px */
-  gap: 30px;
-  /* 设置entry之间的间距 */
-}
-
-.entry {
-  height: 200px;
-  padding: 10px;
-  border: 1px solid black;
-  background-color: white;
-  border-radius: 10px;
-}
-
-.entry:hover {
-  box-shadow: 0 10px 30px #86c4f7;
-  transform: scale(1.05);
-  transition: all 0.3s;
-}
-
-.tags {
-  display: inline-block;
-  margin-right: 5px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  background-color: greenyellow;
+/* 标题样式 */
+h2 {
   color: #333;
-  font-size: 12px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  cursor: pointer;
-  transition: all 0.3s;
+  /* 深色字体，突出标题 */
+  text-align: center;
+  /* 标题居中 */
+  margin-bottom: 20px;
+  /* 与下方内容的间距 */
 }
 
-.img {
-  width: 100px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  transition: all 0.3s;
-}
-
+/* 搜索区域样式 */
 .search {
   display: flex;
-  width: 600px;
-  margin: 0 auto;
-}
-
-.search .icon:hover {
-  cursor: pointer;
+  /* 使用Flex布局使输入框并排 */
+  justify-content: space-around;
+  /* 两个搜索框之间平均分布 */
+  margin-bottom: 30px;
+  /* 与下方内容的间距 */
 }
 
 .input-with-select {
-  margin-right: 10px;
+  flex-grow: 1;
+  /* 让搜索框占据可用空间 */
+  margin: 0 10px;
+  /* 两个搜索框之间略有间距 */
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 20px;
+/* 词条容器样式，保留网格布局 */
+.entry-container {
+  padding: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 30px;
+}
+
+/* 词条样式 */
+.entry {
+  cursor: pointer;
+  /* 鼠标悬停时显示手型光标 */
+  border: 1px solid #eee;
+  /* 轻微边框 */
+  padding: 15px;
+  /* 内边距 */
+  border-radius: 5px;
+  /* 圆角边框 */
+  background-color: #fafafa;
+  /* 轻微背景色差异 */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  /* 平滑过渡效果 */
+}
+
+.entry:hover {
+  transform: translateY(-5px);
+  /* 鼠标悬停时轻微上浮 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* 添加阴影效果 */
+}
+
+.img {
+  width: 100%;
+  /* 图片宽度自适应 */
+  border-radius: 3px;
+  /* 图片圆角 */
+  margin-bottom: 10px;
+  /* 与标题的间距 */
+}
+
+.tags {
+  background-color: #eef;
+  /* 标签背景色 */
+  padding: 5px;
+  /* 标签内边距 */
+  border-radius: 3px;
+  /* 标签圆角 */
+  display: inline-block;
+  /* 使标签内联显示 */
+  margin: 2px;
+  /* 标签间的小间距 */
+  font-size: 0.8rem;
+  /* 标签字体大小 */
+}
+
+/* 分页器样式 */
+.el-pagination {
+  margin-top: 30px;
+  /* 与词条内容的间距 */
+  display: flex;
+  /* 使用Flex布局 */
+  justify-content: center;
+  /* 分页器居中 */
 }
 </style>

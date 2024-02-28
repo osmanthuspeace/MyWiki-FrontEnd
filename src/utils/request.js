@@ -33,8 +33,8 @@ service.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // 处理 401 错误（未授权/Token 过期等）
       ElMessage.error("Token 已过期，请重新登录");
-      store.dispatch("logout"); // 或其他逻辑，例如清除 token
-      router.push("/login");
+    //   store.dispatch("logout"); // 或其他逻辑，例如清除 token
+    //   router.push("/login");
     }
     return Promise.reject(error);
   }

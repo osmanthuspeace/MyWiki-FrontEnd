@@ -59,6 +59,14 @@ const routes = [
     component: UserInfo,
     meta: { requiresAuth: true },
   },
+  {
+    path:"/create",
+    component: () => import("../Views/Create.vue"),
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/error",
+  },  
 ];
 
 const router = createRouter({
@@ -66,5 +74,14 @@ const router = createRouter({
   routes,
 });
 
+router.afterEach((to, from) => {
+  // 检查是否跳转到主页
+  if (to.path === "/entries"&&(from.path=="/login"||from.path=="/userinfo")) {
+    console.log("跳转到主页");
+    // 使用 location.reload() 来刷新页面
+    // 注意: 这将导致整个页面重新加载，可能不是最佳的用户体验
+    window.location.reload();
+  }
+});
 
 export default router;

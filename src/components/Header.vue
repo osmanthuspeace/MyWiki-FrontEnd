@@ -1,8 +1,8 @@
 <template>
     <header>
-        <h1>MyWiki</h1>
+        <h1 @click="toMain">MyWiki</h1>
         <div>
-            <button class="login-button" @click="() => { router.push('/register') }">注册</button>
+            <button v-if="!isLogged" class="login-button" @click="() => { router.push('/register') }">注册</button>
             <button v-if="!isLogged" class="login-button" @click="() => { router.push('/login') }">登录</button>
             <button v-if="isLogged" class="login-button" @click="() => { router.push('/userinfo') }">个人中心</button>
         </div>
@@ -12,16 +12,16 @@
 <script setup>
 import router from '@/router';
 import { ref, onMounted, onUnmounted } from 'vue';
+import { useStore } from 'vuex';
+import {ElMessage} from 'element-plus';
 const isLogged = ref(false);
-onMounted(() => {
-  isLogged.value = localStorage.getItem('token') !== null;
-  console.log(isLogged.value);
-  if (!isLogged.value) {
-    // Message.error('Please login first');
-    router.push('/');
-  }
-})
 
+const store = useStore();
+isLogged.value = localStorage.getItem('token') !== null;
+
+function toMain() {
+    router.push('/');
+}
 
 </script>
 
@@ -37,6 +37,9 @@ header {
 
 h1 {
     width: 150px;
+}
+h1:hover {
+    cursor: pointer;
 }
 
 .login-button {
