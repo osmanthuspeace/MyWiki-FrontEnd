@@ -1,9 +1,9 @@
 <template>
-    <el-descriptions class="margin-top" title="UerInfo" :column="1" :size="size" border width>
+    <el-descriptions class="margin-top" title="UerInfo" :column="1" border>
         <el-descriptions-item width="150px">
             <template #label>
                 <div class="cell-item">
-                    <el-icon :style="iconStyle">
+                    <el-icon>
                         <user />
                     </el-icon>
                     Username
@@ -13,9 +13,10 @@
         </el-descriptions-item>
 
         <el-descriptions-item>
+
             <template #label>
                 <div class="cell-item">
-                    <el-icon :style="iconStyle">
+                    <el-icon>
                         <tickets />
                     </el-icon>
                     Role
@@ -46,7 +47,7 @@ function loginout() {
 
 onMounted(() => {
     name.value = localStorage.getItem('username');
-    console.log(name.value);
+    // console.log(name.value);
     request.get('/User/GetUserInfoByName?name=' + name.value)
         .then(response => {
             role.value = response.data.roleName;

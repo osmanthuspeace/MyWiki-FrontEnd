@@ -61,7 +61,7 @@ const SearchEntry = () => {
   }
   axios.get('http://localhost:5054/api/Entry/GetEntriesByTitle/' + input.value + '?page=' + currentPage.value + '&pageSize=' + pageSize.value)
     .then(response => {
-      console.log(response.data);
+      // console.log(response.data);
       entries.value = response.data;
       entryNum.value = response.data.length;
     })
