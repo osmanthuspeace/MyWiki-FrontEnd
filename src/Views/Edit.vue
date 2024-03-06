@@ -88,7 +88,8 @@ onMounted(() => {
 
 <style scoped>
 .container {
-    margin: 100px 100px 0 0;
+    margin: 100px auto;
+    padding-right: 100px;
     width: 600px;
 }
 h1{
