@@ -62,7 +62,7 @@ function toRoles() {
   router.push('/roles');
 }
 function toUserInfo() {
-  router.push('/userInfo');
+  router.push('/userinfo');
 }
 function toCreate() {
   router.push('/create');

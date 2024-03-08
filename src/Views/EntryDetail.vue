@@ -14,13 +14,14 @@
         <el-button @click="back" class="button">返回</el-button>
     </div>
     <el-button type="primary" @click="edit" v-if="isLogged">编辑</el-button>
-    <el-button type="danger" v-if="isLogged">删除</el-button>
+    <el-button type="danger" @click="deletefun" v-if="isLogged">删除</el-button>
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios';
 import router from '@/router';
+import { ElMessage } from 'element-plus';
 
 const isLogged = ref(false);
 
@@ -41,6 +42,14 @@ axios.get('/Entry/GetEntryById/' + props.id)
 
 const edit = () => {
     router.push(`/entry/edit/${props.id}`);
+}
+
+const deletefun = () => {
+    ElMessage({
+        message: ' Stimulate delete this entry',
+        type: 'info',
+        showClose: true,
+    });
 }
 
 const back = () => {

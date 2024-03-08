@@ -73,7 +73,7 @@ const router = createRouter({
 });
 
 router.afterEach((to, from) => {
-  if (to.path === "/entries"&&(from.path=="/login"||from.path=="/userInfo")) {
+  if (to.path === "/entries"&&(from.path=="/login"||from.path=="/entries"||from.path=="/userinfo")) {
     // console.log("跳转到主页");
     // 注意: 这将导致整个页面重新加载，可能不是最佳的用户体验
     window.location.reload();
