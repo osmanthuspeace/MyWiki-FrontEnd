@@ -23,10 +23,11 @@
 </template>
   
 <script setup>
-import { reactive, defineProps, onMounted } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { ref } from 'vue'
 import request from '@/utils/request'
 import router from '@/router';
+import { ElMessage } from 'element-plus';
 
 const tags = ref([])
 const options = ref([]);
@@ -44,7 +45,8 @@ const onSubmit = () => {
         content: form.content,
         tagNames: tags.value
     }).then(response => {
-        alert('Post successfully!')
+        // alert('Post successfully!')
+        ElMessage.success('Post successfully!');
         console.log(response.data);
         router.push('/entries');
     }).catch(error => {

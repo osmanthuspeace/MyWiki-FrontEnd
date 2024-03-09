@@ -2,9 +2,9 @@
     <div class="not-found">
         <h1>404</h1>
         <p>抱歉，您访问的页面不存在。</p>
-        <button @click="back">
+        <el-button type="primary" @click="back" style="margin-top: 10px;">
             返回首页
-        </button>
+        </el-button>
     </div>
 </template>
   
@@ -20,7 +20,7 @@ function back() {
   
 <style scoped>
 .not-found {
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
     align-items: center;
     justify-content: center;

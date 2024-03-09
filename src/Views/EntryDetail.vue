@@ -46,7 +46,7 @@ const edit = () => {
 
 const deletefun = () => {
     ElMessage({
-        message: ' Stimulate delete this entry',
+        message: ' Simulate delete this entry',
         type: 'info',
         showClose: true,
     });

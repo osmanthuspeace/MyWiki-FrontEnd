@@ -33,10 +33,10 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 // 引用和定义
@@ -93,6 +93,8 @@ const handleRegister = async () => {
   if (!(await validateUsername()) || !validatePassword()) {
     return;
   }
+  // console.log('registering...');
+  // console.log(loginForm.value);
   loading.value = true;
   store.dispatch('register', loginForm.value)
     .then(() => {

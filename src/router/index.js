@@ -62,6 +62,14 @@ const routes = [
     component: () => import("../Views/Create.vue"),
   },
   {
+    path:"/uploadpicture",
+    component: () => import("../Views/UploadPicture.vue"),
+  },
+  {
+    path:"/pictures",
+    component: () => import("../Views/Pictures.vue"),
+  },
+  {
     path: "/:pathMatch(.*)*",
     redirect: "/error",
   },  
