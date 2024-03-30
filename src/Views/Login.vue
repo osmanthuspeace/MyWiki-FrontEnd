@@ -32,8 +32,7 @@
 </template>
 
 <script setup>
-import axios from 'axios';
-import { ref, watch, nextTick } from 'vue'
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 

@@ -12,7 +12,6 @@
       </template>
     </el-menu-item>
 
-
     <el-sub-menu index="2">
       <template #title>
         <div>
@@ -39,13 +38,23 @@
       <el-menu-item index="3-2" @click="toTags">Tags</el-menu-item>
       <el-menu-item index="3-3" @click="toCreate">Create new Entries</el-menu-item>
     </el-sub-menu>
-    <!-- 其他菜单项省略 -->
+    <el-sub-menu index="4">
+      <template #title>
+        <div>
+          <el-icon><Files /></el-icon>
+          <span>图片管理</span>
+        </div>
+      </template>
+      <el-menu-item index="4-1" @click="toPictures">Picture List</el-menu-item>
+      <el-menu-item index="4-2" @click="toUploadPicture">Upload Picture</el-menu-item>
+    </el-sub-menu>
+
+
   </el-menu>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { Message } from "@element-plus/icons-vue";
 import router from '@/router';
 import { useStore } from 'vuex';
 const isCollapse = ref(false);
@@ -64,12 +73,17 @@ function toRoles() {
   router.push('/roles');
 }
 function toUserInfo() {
-  router.push('/userInfo');
+  router.push('/userinfo');
 }
 function toCreate() {
   router.push('/create');
 }
-const store = useStore();
+function toUploadPicture() {
+  router.push('/uploadpicture');
+}
+function toPictures() {
+  router.push('/pictures');
+}
 
 // isLogged.value = store.getters.getLoginState;
 isLogged.value = localStorage.getItem('token') !== null;

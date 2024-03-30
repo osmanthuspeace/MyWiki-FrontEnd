@@ -1,8 +1,7 @@
 import { createStore } from "vuex";
-import axios from "axios";
 import router from "../router";
 import request from "../utils/request";
-import { set } from "nprogress";
+import { ElMessage } from "element-plus";
 
 const store = createStore({
   state() {
@@ -22,7 +21,7 @@ const store = createStore({
     },
     getLoginState(state) {
       return state.isLoggedIn;
-    }
+    },
   },
   mutations: {
     setToken(state, token) {
@@ -42,18 +41,21 @@ const store = createStore({
     },
   },
   actions: {
-    async register({ username, password }){
+    async register( _ , { username, password }) { //填入的参数必须在第二个位置
+      // console.log("username: " + username);
+      // console.log("password: " + password);
       return request
         .post("/User/Register", {
           Name: username,
           Password: password,
         })
         .then(() => {
-          return true;
+          ElMessage.success("注册成功");
+          // console.log("注册成功");
         })
         .catch((error) => {
-          console.log(error);
-        }); 
+          console.log("This is the error " + error);
+        });
     },
     async login({ commit }, { username, password }) {
       return request
@@ -72,7 +74,6 @@ const store = createStore({
         })
         .catch((error) => {
           console.log(error);
-
         });
     },
     logout({ commit }) {

@@ -61,7 +61,7 @@ const SearchEntry = () => {
   }
   axios.get('http://localhost:5054/api/Entry/GetEntriesByTitle/' + input.value + '?page=' + currentPage.value + '&pageSize=' + pageSize.value)
     .then(response => {
-      console.log(response.data);
+      // console.log(response.data);
       entries.value = response.data;
       entryNum.value = response.data.length;
     })
@@ -112,33 +112,21 @@ onMounted(async () => {
     loadEntries();
   }
 });
-
-
-
 </script>
 
 <style scoped>
-/* 容器样式 */
 .container {
   max-width: 1200px;
-
   /* 最大宽度，确保内容在大屏幕上的可读性 */
   margin: 0 auto;
-  /* 居中显示 */
   padding: 20px;
-  /* 内边距 */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  /* 设置字体 */
 }
 
-/* 标题样式 */
 h2 {
   color: #333;
-  /* 深色字体，突出标题 */
   text-align: center;
-  /* 标题居中 */
   margin-bottom: 20px;
-  /* 与下方内容的间距 */
 }
 
 /* 搜索区域样式 */
@@ -148,7 +136,6 @@ h2 {
   justify-content: space-around;
   /* 两个搜索框之间平均分布 */
   margin-bottom: 30px;
-  /* 与下方内容的间距 */
 }
 
 .input-with-select {
@@ -158,7 +145,7 @@ h2 {
   /* 两个搜索框之间略有间距 */
 }
 
-/* 词条容器样式，保留网格布局 */
+/* 词条容器样式，网格布局 */
 .entry-container {
   padding: 30px;
   display: grid;
@@ -169,15 +156,10 @@ h2 {
 /* 词条样式 */
 .entry {
   cursor: pointer;
-  /* 鼠标悬停时显示手型光标 */
   border: 1px solid #eee;
-  /* 轻微边框 */
   padding: 15px;
-  /* 内边距 */
   border-radius: 5px;
-  /* 圆角边框 */
   background-color: #fafafa;
-  /* 轻微背景色差异 */
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   /* 平滑过渡效果 */
 }
@@ -200,17 +182,12 @@ h2 {
 
 .tags {
   background-color: #eef;
-  /* 标签背景色 */
   padding: 5px;
-  /* 标签内边距 */
   border-radius: 3px;
-  /* 标签圆角 */
   display: inline-block;
   /* 使标签内联显示 */
   margin: 2px;
-  /* 标签间的小间距 */
   font-size: 0.8rem;
-  /* 标签字体大小 */
 }
 
 /* 分页器样式 */

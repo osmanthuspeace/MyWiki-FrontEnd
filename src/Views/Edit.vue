@@ -23,10 +23,11 @@
 </template>
   
 <script setup>
-import { reactive, defineProps, onMounted } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { ref } from 'vue'
 import request from '@/utils/request'
 import router from '@/router';
+import { ElMessage } from 'element-plus';
 
 const props = defineProps({
     id: String
@@ -45,14 +46,18 @@ const back = () => {
 }
 
 const onSubmit = () => {
-    console.log('submit!')
+    // console.log('submit!')
     request.put('/Entry/UpdateEntry', {
         id: props.id,
         title: form.title,
         content: form.content,
         tagNames: tags.value
     }).then(response => {
-        alert('Update successfully!')
+        ElMessage({
+            message: 'Update successfully!',
+            type: 'success'
+        });
+        // alert('Update successfully!')
         // console.log(response.data);
         router.push('/entries');
     }).catch(error => {
@@ -88,7 +93,8 @@ onMounted(() => {
 
 <style scoped>
 .container {
-    margin: 100px 100px 0 0;
+    margin: 100px auto;
+    padding-right: 100px;
     width: 600px;
 }
 h1{

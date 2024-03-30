@@ -6,7 +6,6 @@ import RegisterVue from "../Views/Register.vue";
 import error from "../Views/Error.vue";
 import tags from "../Views/Tags.vue";
 import EntryDetail from "../Views/EntryDetail.vue";
-import request from "../utils/request";
 import UserInfo from "../Views/UserInfo.vue";
 
 const routes = [
@@ -21,7 +20,6 @@ const routes = [
   {
     path: "/users",
     component: UsersVue,
-    meta: { requiresAuth: true }, // 需要身份验证
   },
   {
     path: "/login",
@@ -64,6 +62,14 @@ const routes = [
     component: () => import("../Views/Create.vue"),
   },
   {
+    path:"/uploadpicture",
+    component: () => import("../Views/UploadPicture.vue"),
+  },
+  {
+    path:"/pictures",
+    component: () => import("../Views/Pictures.vue"),
+  },
+  {
     path: "/:pathMatch(.*)*",
     redirect: "/error",
   },  
@@ -75,10 +81,8 @@ const router = createRouter({
 });
 
 router.afterEach((to, from) => {
-  // 检查是否跳转到主页
-  if (to.path === "/entries"&&(from.path=="/login"||from.path=="/userinfo")) {
-    console.log("跳转到主页");
-    // 使用 location.reload() 来刷新页面
+  if (to.path === "/entries"&&(from.path=="/login"||from.path=="/entries"||from.path=="/userinfo")) {
+    // console.log("跳转到主页");
     // 注意: 这将导致整个页面重新加载，可能不是最佳的用户体验
     window.location.reload();
   }

@@ -6,7 +6,6 @@
 </template>
   
 <script setup>
-import NavBarVue from './NavBar.vue';
 
 </script>
   

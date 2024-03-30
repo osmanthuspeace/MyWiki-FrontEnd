@@ -6,8 +6,6 @@
     <Side />
     <Display />
   </div>
-
-  <!-- <Layout /> -->
 </template>
 
 <script setup>

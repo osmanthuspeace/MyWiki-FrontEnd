@@ -33,10 +33,10 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import axios from 'axios';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 // 引用和定义
@@ -64,12 +64,11 @@ const validateUsername = async () => {
     validname.value = 'Username must be between 3 and 20 characters.';
     return false;
   }
-  // 调用后端接口检查用户名是否重复
   try {
     const response = await axios.get('/User/CheckUserName', {
       params: { name: loginForm.value.username }
     });
-    if (response.data) { // 假设后端返回的数据中有一个exists字段，表示用户名是否存在
+    if (response.data) {
       validname.value = 'Username is already taken.';
       return false;
     }
@@ -86,19 +85,20 @@ const validatePassword = () => {
     ElMessage.error('Password must be between 6 and 20 characters.');
     return false;
   }
-  // 这里可以添加更多的密码验证逻辑（如检查密码复杂度）
   return true;
 };
 
 // 注册处理
 const handleRegister = async () => {
   if (!(await validateUsername()) || !validatePassword()) {
-    return; // 如果验证失败，则不继续执行注册逻辑
+    return;
   }
+  // console.log('registering...');
+  // console.log(loginForm.value);
   loading.value = true;
   store.dispatch('register', loginForm.value)
     .then(() => {
-      router.push('/login'); // 注册成功后重定向到登录页面
+      router.push('/login');
     }).catch((error) => {
       ElMessage.error(error.response.data || 'Registration failed.');
       loading.value = false;
