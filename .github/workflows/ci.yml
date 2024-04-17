@@ -55,5 +55,5 @@ jobs:
         title: 'Automated Dependency Update'
         body: 'Automated pull request to update dependencies.'
         branch: 'update-dependencies'
-	ref: main 
+        base: main	
 
